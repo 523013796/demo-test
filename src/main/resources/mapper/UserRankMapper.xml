@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zl.demotest.dao.member.UserRankDao" >
+  <resultMap id="BaseResultMap" type="com.zl.demotest.pojo.member.UserRank" >
+    <id column="no" property="no" jdbcType="TINYINT" />
+    <result column="rank" property="rank" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    no, rank
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Byte" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_rank
+    where no = #{no,jdbcType=TINYINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Byte" >
+    delete from user_rank
+    where no = #{no,jdbcType=TINYINT}
+  </delete>
+  <insert id="insert" parameterType="com.zl.demotest.pojo.member.UserRank" >
+    insert into user_rank (no, rank)
+    values (#{no,jdbcType=TINYINT}, #{rank,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zl.demotest.pojo.member.UserRank" >
+    insert into user_rank
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="rank != null" >
+        rank,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="no != null" >
+        #{no,jdbcType=TINYINT},
+      </if>
+      <if test="rank != null" >
+        #{rank,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zl.demotest.pojo.member.UserRank" >
+    update user_rank
+    <set >
+      <if test="rank != null" >
+        rank = #{rank,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where no = #{no,jdbcType=TINYINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zl.demotest.pojo.member.UserRank" >
+    update user_rank
+    set rank = #{rank,jdbcType=VARCHAR}
+    where no = #{no,jdbcType=TINYINT}
+  </update>
+</mapper>

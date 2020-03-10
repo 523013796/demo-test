@@ -1,0 +1,198 @@
+<!--
+  User: zlin
+  Date: 2019/8/3
+  Time: 19:05
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <style>
+        body,html{
+            width: 100%;
+            height: 100%;
+            padding: 1px;
+        }
+    </style>
+    <style>
+        body{
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: url(/img/4.jpg);
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+
+<form class="layui-form" action="javascript:;">
+    <div class="layui-form-item" style="margin-top: 15px;margin-left:5px;height:40px;">
+        <div class="layui-input-inline">
+            <input type="text" id="key" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" autofocus>
+            <i class="layui-icon layui-icon-search" style="position: absolute;top:8px;right: 8px;"></i>
+        </div>
+        <button type="submit" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo2" onclick="selectbook();">
+            <i class="layui-icon">&#xe615;</i>搜索
+        </button>
+    </div>
+</form>
+<br>
+<div  style="float: left; width: 100%; height: 150px;">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+<div >
+    <div id="UpdateTest"  style="display:none;">
+        <form class="layui-form" id="updateForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-bg-gray">这是书名</label>
+                <div class="layui-input-block" style="width: 300px">
+                    <input id="bookName" type="text" name="name" lay-verify="required" lay-reqtext="书名是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-bg-gray">作者/出版社</label>
+                <div class="layui-input-block" style="width: 300px">
+                    <input id="bookAuthor" type="text" name="author" lay-verify="required" lay-reqtext="这可是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-bg-gray">此书价格</label>
+                <div class="layui-input-block" style="width: 300px">
+                    <input id="bookPrice" type="text" name="price" lay-verify="required" lay-reqtext="这可是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div  class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label layui-bg-gray">购入时间</label>
+                    <div class="layui-input-inline" style="width: 250px">
+                        <input type="text" name="buytime" id="date" lay-verify="date"  placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label layui-bg-gray">此书类别</label>
+                <div class="layui-input-inline" style="width: 250px">
+                    <select id="bookType" name="type" lay-verify="required" lay-search="">
+                        <option value="">搜索选择</option>
+                        <option th:each="bt:${btlist}" th:value="${bt.id}" th:text="${bt.booktypename}" th:selected="${bt.id==bookType}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 15px">
+                <label class="layui-form-label layui-bg-gray">购入数量</label>
+                <div class="layui-input-block" style="width: 300px">
+                    <input id="bookNumber" type="text" name="number" lay-verify="required" lay-reqtext="这可是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label layui-bg-gray">此书简介</label>
+                <div class="layui-input-block" style="width: 50%">
+                    <textarea id="bookIntroduce" name="introduce" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <a id="bookUpdateSubmit" href="javascript:;" class="layui-btn" lay-submit="" lay-filter="demo1" >立即提交</a><!--onclick="updateBook();"-->
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="addBookT" style="display: none;text-align: center;">
+    <form class="layui-form">
+        <div class="layui-form-item" style="margin-top: 15px">
+            <label class="layui-form-label layui-bg-gray">图书类型</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="book_type" lay-verify="required" lay-reqtext="这可是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <a class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo2" id="type_add" >确认添加</a>
+    </form>
+
+</div>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="insert" th:remove="${session.user.rank_t==1||session.user.rank_t==2?'none':'all'}">
+            <i class="layui-icon">&#xe61f;</i>图书
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="insertType" style="margin-left: 100px;" id="bookTypeAdd" th:remove="${session.user.rank_t==1||session.user.rank_t==2?'none':'all'}">
+            <i class="layui-icon">&#xe61f;</i>类别
+        </button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    {{# if(d.numberremaining>0){}}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="borrow"><i class="layui-icon">&#xe705;</i></a>
+    {{# }else{}}
+    <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon">&#xe705;</i></a>
+    {{# } }}
+    <!--th:remove="${''+session.user.rank=='超级管理员'?'none':'all'}"-->
+    <a class="layui-btn layui-btn-xs" lay-event="edit" th:remove="${session.user.rank_t==1||session.user.rank_t==2?'none':'all'}"><i class="layui-icon">&#xe642;</i></a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" th:remove="${session.user.rank_t==1||session.user.rank_t==2?'none':'all'}"><i class="layui-icon">&#xe640;</i></a>
+    <!--
+    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
+    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+    -->
+
+
+</script>
+
+
+<script src="/layui/layui.js"></script>
+<script src="/js/page/common-util.js"></script>
+<script src="/js/jquery-3.4.1.js"></script>
+<script src="/js/page/book/book.js"></script>
+<script>
+    /**
+     * 进入页面加载表格
+     */
+    tableto('getAllbook','#barDemo');
+</script>
+<script th:inline="javascript">
+    var uid ;
+    function borrow_book(data) {
+        $.ajax({
+            type:'get',
+            url:'getSessionUserId',
+            dataType:'json',
+            success:function (res) {
+                if (res.status==200){
+                    uid = res.data;
+                    //layer.msg(uid, {icon: 6});
+                    console.log(uid);
+                    $.ajax({
+                        url:'addBorrowBook',
+                        type:'GET',
+                        dataType:'json',
+                        data:{'user':uid,'book':data.id},
+                        success:function (res) {
+                            if (res.status===200){
+                                layer.msg("你已成功借阅哟！", {icon: 6});
+                                //模拟点击刷新表格本行数据
+                                $('.layui-laypage-btn').click();
+                                //tableto('getAllbook','#barDemo');
+                            }
+                        },
+                        error:function () {
+                            layer.msg("网络异常，请稍后重试！", {icon: 5});
+                        }
+                    });
+                }else {
+                    layer.msg("网络异常，请稍后重试！", {icon: 5});
+                }
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

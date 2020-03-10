@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zl.demotest.dao.book.BorrowBooksDao" >
+  <resultMap id="BaseResultMap" type="com.zl.demotest.pojo.book.BorrowBooks" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user" property="user" jdbcType="INTEGER" />
+    <result column="book" property="book" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="booknumber" property="booknumber" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="BIT" />
+    <result column="r_time" property="rTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user, book, time, booknumber, flag, r_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from borrow_books
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getAllBorrowBook" resultMap="BaseResultMap">
+    select * from borrow_books ORDER BY TIME DESC
+  </select>
+  <select id="selectByBookId" resultMap="BaseResultMap">
+    select * from borrow_books where book = #{key}
+  </select>
+  <select id="selectByBookOrUserId" resultMap="BaseResultMap">
+    select * from  borrow_books
+    where user = #{key}
+    or book = #{key}
+    ORDER BY TIME DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from borrow_books
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zl.demotest.pojo.book.BorrowBooks" >
+    insert into borrow_books (id, user, book, 
+      time, booknumber, flag, 
+      r_time)
+    values (#{id,jdbcType=INTEGER}, #{user,jdbcType=INTEGER}, #{book,jdbcType=INTEGER}, 
+      #{time,jdbcType=TIMESTAMP}, #{booknumber,jdbcType=INTEGER}, #{flag,jdbcType=BIT}, 
+      #{rTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zl.demotest.pojo.book.BorrowBooks" >
+    insert into borrow_books
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="user != null" >
+        user,
+      </if>
+      <if test="book != null" >
+        book,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="booknumber != null" >
+        booknumber,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="rTime != null" >
+        r_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="user != null" >
+        #{user,jdbcType=INTEGER},
+      </if>
+      <if test="book != null" >
+        #{book,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="booknumber != null" >
+        #{booknumber,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=BIT},
+      </if>
+      <if test="rTime != null" >
+        #{rTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zl.demotest.pojo.book.BorrowBooks" >
+    update borrow_books
+    <set >
+      <if test="user != null" >
+        user = #{user,jdbcType=INTEGER},
+      </if>
+      <if test="book != null" >
+        book = #{book,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="booknumber != null" >
+        booknumber = #{booknumber,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=BIT},
+      </if>
+      <if test="rTime != null" >
+        r_time = #{rTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateNumberRemainingOne">
+    UPDATE
+  `mangeteam`.`books`
+SET
+
+  `numberremaining` = `numberremaining`-1
+WHERE `id` = #{id}
+  </update>
+  <update id="guiHuanBook" >
+    update borrow_books
+    set flag = 0 ,
+    r_time = #{rTime}
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zl.demotest.pojo.book.BorrowBooks" >
+    update borrow_books
+    set user = #{user,jdbcType=INTEGER},
+      book = #{book,jdbcType=INTEGER},
+      time = #{time,jdbcType=TIMESTAMP},
+      booknumber = #{booknumber,jdbcType=INTEGER},
+      flag = #{flag,jdbcType=BIT},
+      r_time = #{rTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

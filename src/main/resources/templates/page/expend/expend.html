@@ -1,0 +1,271 @@
+<!--
+  User: zlin
+  Date: 2019/11/22
+  Time: 21:15
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <style>
+        body,html{
+            width: 100%;
+            height: 100%;
+            padding: 1px;
+        }
+    </style>
+    <style>
+        body{
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: url(/img/4.jpg);
+        }
+    </style>
+</head>
+<body>
+
+<form class="layui-form" action="javascript:;">
+    <div class="layui-form-item" style="margin-top: 15px;margin-left:5px;height:40px;">
+        <div class="layui-input-inline">
+            <input type="text" id="key" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" autofocus>
+            <i class="layui-icon layui-icon-search" style="position: absolute;top:8px;right: 8px;"></i>
+        </div>
+        <button type="submit" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo10" onclick="selectExpend();">
+            <i class="layui-icon">&#xe615;</i>搜索
+        </button>
+    </div>
+    <div>
+        <label class="layui-form-label">
+            <span style="font-size: 14px">剩余金额</span>
+        </label>
+        <label class="layui-form-label" style="width: 500px;text-align: left;">
+            ￥&nbsp;<span th:text="${amount_y!=null?amount_y:'00.00'}" style="font-size: 14px;color: green"></span>元
+        </label>
+    </div>
+</form>
+<br>
+<div class="layui-tab layui-tab-brief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">收入</li>
+        <li>支出</li>
+    </ul>
+
+    <!--收入-->
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <div  style="float: left; width: 100%; height: 150px;">
+                <table class="layui-hide" id="test10" lay-filter="test10"></table>
+            </div>
+
+            <div >
+                <div id="UpdateExpend"  style="display:none;">
+                    <form class="layui-form" id="updateForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-bg-gray">金额</label>
+                            <div class="layui-input-block" style="width: 300px">
+                                <input id="expend_amount" type="text" name="amount" lay-verify="required" lay-reqtext="请输入金额？" placeholder="￥ 00.00" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-bg-gray">时间</label>
+                            <div class="layui-input-block" style="width: 300px">
+                                <input  name="time" class="layui-input" placeholder="yyyy-MM-dd hh:mm:ss" id="datetime">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-bg-gray">备注(用途)</label>
+                            <div class="layui-input-block" style="width: 300px">
+                                <!--                    <input id="expend_uses" type="text" name="uses" lay-verify="required" lay-reqtext="这可是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">-->
+                                <textarea id="expend_uses" name="uses" placeholder="请输入内容" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <a id="bookUpdateSubmit" href="javascript:;" class="layui-btn" lay-submit="" lay-filter="expend_update_submit" >立即提交</a><!--onclick="updateBook();"-->
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <script type="text/html" id="toolbarDemo10">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="insert10" th:remove="${session.user.rank_t==1||session.user.rank_t==3?'none':'all'}">
+                        <i class="layui-icon">&#xe61f;</i>添加
+                    </button>
+                </div>
+            </script>
+
+            <script type="text/html" id="barDemo10">
+                <a class="layui-btn layui-btn-xs" lay-event="edit10" th:remove="${session.user.rank_t==1||session.user.rank_t==3?'none':'all'}">
+                    <i class="layui-icon">&#xe642;</i>
+                </a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del10" th:remove="${session.user.rank_t==1||session.user.rank_t==3?'none':'all'}">
+                    <i class="layui-icon">&#xe640;</i>
+                </a>
+            </script>
+
+
+        </div>
+
+
+        <!--支出-->
+        <div class="layui-tab-item">
+            <div  style="float: left; width: 100%; height: 150px;">
+                <table class="layui-hide" id="test101" lay-filter="test101"></table>
+            </div>
+
+            <div >
+                <div id="UpdateExpend1"  style="display:none;">
+                    <form class="layui-form" id="updateForm1">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-bg-gray">金额</label>
+                            <div class="layui-input-block" style="width: 300px">
+                                <input id="expend_amount1" type="text" name="amount" lay-verify="required" lay-reqtext="请输入金额？" placeholder="￥ 00.00" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-bg-gray">时间</label>
+                            <div class="layui-input-block" style="width: 300px">
+                                <input  name="time" class="layui-input" placeholder="yyyy-MM-dd hh:mm:ss" id="datetime1">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-bg-gray">备注(用途)</label>
+                            <div class="layui-input-block" style="width: 300px">
+                                <!--                    <input id="expend_uses" type="text" name="uses" lay-verify="required" lay-reqtext="这可是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">-->
+                                <textarea id="expend_uses1" name="uses" placeholder="请输入内容" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <a id="bookUpdateSubmit1" href="javascript:;" class="layui-btn" lay-submit="" lay-filter="expend_update_submit1" >立即提交</a><!--onclick="updateBook();"-->
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <script type="text/html" id="toolbarDemo101">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="insert101" th:remove="${session.user.rank_t==1||session.user.rank_t==3?'none':'all'}">
+                        <i class="layui-icon">&#xe61f;</i>添加
+                    </button>
+                </div>
+            </script>
+
+            <script type="text/html" id="barDemo101">
+                <a class="layui-btn layui-btn-xs" lay-event="edit101" th:remove="${session.user.rank_t==1||session.user.rank_t==3?'none':'all'}">
+                    <i class="layui-icon">&#xe642;</i>
+                </a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del101" th:remove="${session.user.rank_t==1||session.user.rank_t==3?'none':'all'}">
+                    <i class="layui-icon">&#xe640;</i>
+                </a>
+            </script>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="/layui/layui.js"></script>
+<script src="/js/page/common-util.js"></script>
+<script src="/js/jquery-3.4.1.js"></script>
+<script src="/js/page/expend/qryexpend_in.js"></script>
+<script src="/js/page/expend/qryexpend_out.js"></script>
+<script>
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+        var element = layui.element;
+
+        //…
+    });
+</script>
+<script>
+    /**
+     * 进入页面加载表格
+     */
+    tableto('selectAllExpend_in','#barDemo10');
+    tableto1('selectAllExpend_out','#barDemo101');
+</script>
+<script th:inline="javascript">
+    function insertExpend(data) {
+        layui.use('form',function () {
+            var form = layui.form;
+            form.on('submit(expend_update_submit)',function () {
+                $.ajax({
+                    url:'insertExpend_in'
+                    ,type:'POST'
+                    ,dataType:'json'
+                    ,data:{
+                        'user':[[${session.user.name}]]
+                        ,'amount':$('#expend_amount').val()
+                        ,'time':$('#datetime').val()
+                        ,'uses':$('#expend_uses').val()
+                    }
+                    ,success:function (res) {
+                        if (res.status===200){
+                            layer.msg('添加成功',{icon : 6});
+                            //刷新表格本页
+                            $('.layui-laypage-btn').click();
+                            //延时3.2秒关闭所有弹窗
+                            setTimeout(function () { layer.closeAll(); }, 3100);
+                        }else {
+                            layer.msg('网络异常，请稍后重试！',{icon : 5});
+                        }
+
+                    }
+                    ,error:function () {
+                        layer.msg('网络异常，请稍后重试！',{icon : 5});
+                    }
+                });
+            })
+        });
+
+    }
+
+    function insertExpend1(data) {
+        layui.use('form',function () {
+            var form = layui.form;
+            form.on('submit(expend_update_submit1)',function () {
+                $.ajax({
+                    url:'insertExpend_out'
+                    ,type:'POST'
+                    ,dataType:'json'
+                    ,data:{
+                        'user':[[${session.user.name}]]
+                        ,'amount':$('#expend_amount1').val()
+                        ,'time':$('#datetime1').val()
+                        ,'uses':$('#expend_uses1').val()
+                    }
+                    ,success:function (res) {
+                        if (res.status===200){
+                            layer.msg('添加成功',{icon : 6});
+                            //刷新表格本页
+                            $('.layui-laypage-btn').click();
+                            //延时3.2秒关闭所有弹窗
+                            setTimeout(function () { layer.closeAll(); }, 3100);
+                        }else {
+                            layer.msg('网络异常，请稍后重试！',{icon : 5});
+                        }
+
+                    }
+                    ,error:function () {
+                        layer.msg('网络异常，请稍后重试！',{icon : 5});
+                    }
+                });
+            })
+        });
+
+    }
+</script>
+</body>
+</html>

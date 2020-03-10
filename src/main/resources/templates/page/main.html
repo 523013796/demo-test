@@ -1,0 +1,206 @@
+<!--
+  User: zlin
+  Date: 2019/8/3
+  Time: 16:46
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+</head>
+<body class="layui-layout-body">
+
+<div class="layui-layout layui-layout-admin">
+
+    <!-- 头部展示区域 -->
+    <div class="layui-header layui-bg-black" style="text-align: center;">
+        <div class="layui-logo">
+            <a href="main"><span style="color: whitesmoke;">Welcome!</span></a>
+        </div>
+
+        <b style="font-size: 20px;">万创科技团队管理系统</b>
+
+        <ul class="layui-nav layui-layout-right" lay-filter="test" style="margin-right: 15px;">
+            <li class="layui-nav-item">
+                <span th:text="${session.user!=null?session.user.rank:''}" style="margin-top: 5px"></span>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <span th:text="${session.user!=null?session.user.name:'游客你好'}"></span>
+                </a>
+                <dl class="layui-nav-child"> <!-- 二级菜单 -->
+                    <dd><a th:href="'my_message?id='+${session.user.id}" href="my_message" target="mainFram">我的资料</a></dd>
+                    <!--<dd><a href="" target="mainFram">修改资料</a></dd>-->
+                    <dd><a href="javascript:;" onclick="updatePassword();">修改密码</a></dd>
+                    <dd><a href="logout">退了</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- 左边侧栏 -->
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test" >
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">图书</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="books/qrybook" target="mainFram">查询管理</a></dd>
+                        <!--<dd><a href="books/toAddBook" target="mainFram">添加</a></dd>-->
+                        <dd><a href="borrowBook/record" target="mainFram">借书记录</a></dd>
+                        <dd><a href="borrowBook/myRecord" target="mainFram">我的借书</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">经费</a>
+                    <dl class="layui-nav-child">
+                        <!--<dd><a href="expend/all_amount" target="mainFram">剩余经费</a></dd>-->
+                        <dd><a href="expend/all_expend" target="mainFram">经费管理</a></dd>
+                        <!--<dd><a href="expend/qry_expend" target="mainFram">支出记录</a></dd>
+                        <dd><a href="expend/qry_expend_in" target="mainFram">收入记录</a></dd>-->
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">人员</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="member/goUser" target="mainFram">成员管理</a></dd>
+                        <dd><a href="member/toAuthority" target="mainFram">权限管理</a></dd>
+                        <!--<dd><a href="javascript:;" target="mainFram">后台模版</a></dd>
+                        <dd><a href="javascript:;" target="mainFram">电商平台</a></dd>-->
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="comm/community" target="mainFram">社区</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 内容主体区域 -->
+    <div class="layui-body">
+        <iframe id="mainFram" name="mainFram" src="welcome" style="width: 100%; height: 99%; "></iframe>
+    </div>
+    <!-- 底部固定区域 -->
+    <div class="layui-footer" style="text-align: center;">
+        © our team management - made in zlin
+    </div>
+
+</div>
+<!--修改密码隐藏框-->
+<div id="update_password" style="display: none;">
+    <form class="layui-form" id="form">
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">新密码</label>
+            <div class="layui-input-inline">
+                <input id="password" name="password" type="password" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">确认密码</label>
+            <div class="layui-input-inline">
+                <input id="password_two" type="password" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-inline" style="width: 100%;text-align: center;">
+                <a id="submit" href="javascript:;" class="layui-btn" lay-submit="">确认修改</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/layui/layui.all.js"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/js/page/common-util.js"></script>
+<script>
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+        var element = layui.element;
+        element.render('nav','test');
+    });
+    /*//JavaScript代码区域
+    layui.use(['util', 'layer'], function() {
+        var util = layui.util
+            , layer = layui.layer;
+        //固定块
+        util.fixbar({
+            bar1: true
+            , bar2: true
+            , css: {right: 50, bottom: 100}
+            , bgcolor: '#393D49'
+            , click: function (type) {
+                if (type === 'bar1') {
+                    layer.msg('看心情,暂时没什么卵用!')
+                } else if (type === 'bar2') {
+                    layer.msg('只是单纯为了好看而已,别想太多了!')
+                }
+            }
+        });
+    });*/
+</script>
+<script th:inline="javascript" >
+    var rank = [[${session.user!=null?session.user.rank:''}]];
+    console.log(rank);
+
+
+
+
+function updatePassword() {
+
+    layui.use(['layer','form'],function () {
+        var layer = layui.layer;
+
+
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-demo',
+            closeBtn: 1,
+            anim: 2,
+            shadeClose: true,
+            title: "修改密码",
+            area: ['350px', 'auto'],
+            content: $('#update_password')//引用的弹出层的页面层的方式加载修改界面表单
+        });
+        $('#submit').click(function () {
+            var pwd = $('#password').val().trim();
+            var pwd_two = $('#password_two').val().trim();
+            //layer.msg($("#form").serialize().toJSON.toString());
+            //layer.msg(pwd);
+            if (pwd==pwd_two){
+                myAjax('update_password',$("#form").serialize(),function (res) {
+                    if (res.status === 200){
+                        layer.msg("修改成功^_^", {icon: 6});
+                        //延时3.2秒关闭所有弹窗
+                        setTimeout(function () {
+                            layer.closeAll();
+                            location.href = 'logout';
+                        }, 3100);
+                    }  else {
+                        layer.msg("网络异常，请稍后重试！", {icon: 5});
+                    }
+                });
+                /*$.when(ajaxRequest("update_password"),$("#form").serialize()).done(function (res) {
+                   if (res === 200){
+                       layer.msg("修改成功^_^", {icon: 6});
+                       //延时3.2秒关闭所有弹窗
+                       setTimeout(function () {
+                           layer.closeAll();
+                           location.href = 'logout';
+                       }, 3100);
+                   }  else {
+                       layer.msg("网络异常，请稍后重试！", {icon: 5});
+                   }
+                });*/
+            } else {
+                layer.msg('请输入两次相同的密码！')
+            }
+
+        });
+    })
+    
+}
+</script>
+</body>
+</html>

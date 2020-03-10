@@ -1,0 +1,115 @@
+<!--
+  User: zlin
+  Date: 2019/8/16
+  Time: 18:46
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+</head>
+<body>
+<div >
+    <form id="form" class="layui-form" style="margin-top: 20px">
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">姓名</label>
+            <div class="layui-input-inline">
+                <input id="name" name="name" type="text" class="layui-input" placeholder="张三" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">性别</label>
+            <div class="layui-input-block">
+                <input id="sex_m" type="radio" name="sex" value="1" title="男" checked="">
+                <input id="sex_w" type="radio" name="sex" value="0" title="女">
+                <!--<input type="radio" name="sex" value="禁" title="禁用" disabled="">-->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">年龄</label>
+            <div class="layui-input-inline">
+                <input id="age" name="age" type="number" class="layui-input" placeholder="0">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">专业</label>
+            <div class="layui-input-inline">
+                <select id="major" name="major" lay-verify="required">
+                    <option value="">专业</option>
+                    <option th:each="major:${major_list}" th:value="${major.id}" th:text="${major.majorName}">网络工程</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">学号</label>
+            <div class="layui-input-inline">
+                <input id="studentnumber" name="studentnumber" type="text" class="layui-input" placeholder="请输入" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">证件号</label>
+            <div class="layui-input-inline">
+                <input id="idnumber" type="text" name="idnumber" lay-verify="identity" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">电话</label>
+            <div class="layui-input-inline">
+                <input id="phone" type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input" placeholder="请输入">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">登陆密码</label>
+            <div class="layui-input-inline">
+                <input id="password" type="password" name="password" lay-verify="required" autocomplete="off" class="layui-input" placeholder="***">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">微信</label>
+            <div class="layui-input-inline">
+                <input id="wechat" name="wechat" type="text" class="layui-input" placeholder="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-bg-gray">QQ</label>
+            <div class="layui-input-inline">
+                <input id="qq" name="qq" type="text" class="layui-input" placeholder="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a href="javascript:;" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</a>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/js/page/common-util.js"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        //form.render('radio','radio');
+        form.on('submit(demo1)',function () {
+            myAjax('member/logon',$("#form").serialize(),function (res) {
+                if (res.status===200){
+                    layer.msg('注册成功，3秒后自动跳转',{icon : 6});
+                    //刷新表格本页
+                    $('.layui-laypage-btn').click();
+                    //延时3.1秒跳转登陆页面
+                    setTimeout(function () { location.href='index' }, 3100);
+                }else {
+                    layer.msg('网络异常，请稍后重试！',{icon : 5});
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>

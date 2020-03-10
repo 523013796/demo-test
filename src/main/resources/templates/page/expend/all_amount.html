@@ -1,0 +1,56 @@
+<!--
+  User: zlin
+  Date: 2019/8/10
+  Time: 13:59
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <style>
+        body{
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: url(/img/4.jpg);
+        }
+    </style>
+</head>
+<body>
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>剩余经费总计</legend>
+</fieldset>
+<div>
+    <label class="layui-form-label">
+        <span style="font-size: 18px">收入总额</span>
+    </label>
+    <label class="layui-form-label" style="width: 500px;text-align: left;">
+        ￥&nbsp;<span th:text="${amount_z!=null?amount_z:'00.00'}" style="font-size: 18px;color: rebeccapurple"></span>元
+    </label>
+</div>
+<br><br><br><br><br><br>
+<div>
+    <label class="layui-form-label">
+        <span style="font-size: 18px">支出总额</span>
+    </label>
+    <label class="layui-form-label" style="width: 500px;text-align: left;">
+        ￥&nbsp;<span th:text="${amount_out!=null?amount_out:'00.00'}" style="font-size: 18px;color: red"></span>元
+    </label>
+</div>
+<br><br><br><br><br><br>
+<div>
+    <label class="layui-form-label">
+        <span style="font-size: 18px">剩余金额</span>
+    </label>
+    <label class="layui-form-label" style="width: 500px;text-align: left;">
+        ￥&nbsp;<span th:text="${amount_y!=null?amount_y:'00.00'}" style="font-size: 18px;color: green"></span>元
+    </label>
+</div>
+
+
+<script src="/layui/layui.js"></script>
+</body>
+</html>
